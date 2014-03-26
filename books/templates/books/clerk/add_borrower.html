@@ -1,0 +1,22 @@
+{% extends "books/clerk.html" %}
+
+{% block content%}
+
+	{% if registered %}
+	<h2> You registration has been successful.</h2>
+		<meta http-equiv="refresh" content="3;url=/clerk/" />
+	{% else %}
+     <div class="container">
+
+      <form id="borrower" class="form-signin" method="post" action="/clerk/add_borrower/" role="form">
+		{% csrf_token %}
+        <h2 class="form-signin-heading">Please register a borrower </h2>
+		{% if error%} Your registration has not been successful. {%endif%}
+		{{borrower.as_p}}
+	 
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+      </form>
+
+    </div> <!-- /container -->
+	{% endif %}
+{% endblock %}

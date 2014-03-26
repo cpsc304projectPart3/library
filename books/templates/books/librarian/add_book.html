@@ -1,0 +1,24 @@
+{% extends "books/librarian.html" %}
+
+{% block content %}
+
+{% if registered %}
+	<h2> You book has been added.</h2>
+		<meta http-equiv="refresh" content="3;url=/clerk/" />
+		{% else %}
+ <div class="container">
+
+      <form id="book" class="form-signin" method="post" action="/librarian/add_book/" role="form">
+		{% csrf_token %}
+        <h2 class="form-signin-heading">Please add a book</h2>
+		{% if error%} Failed. Please try again. {%endif%}
+		{{book.as_p}}
+	 
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+      </form>
+
+    </div> <!-- /container -->
+
+{% endif %}
+
+{% endblock %}

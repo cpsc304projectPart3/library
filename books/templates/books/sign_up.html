@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+{% load staticfiles %}
+	
+
+    <title>Signup - Toshokan</title>
+
+    <!-- Bootstrap core CSS -->
+	<link href="{% static 'bootstrap/css/bootstrap.min.css' %}"rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+	<link href="{% static 'bootstrap/css/signup.css' %}" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+	  {% if  registered %}
+	  <h2> You have been successfully registered. </h2>
+		<meta http-equiv="refresh" content="3;url=/" />
+	  
+	  {% else %}
+
+
+    <div class="container">
+
+      <form id="user_form" method="post" action="/sign_up/" class="form-signin" role="form">
+		  {% csrf_token %}
+        <h2 class="form-signin-heading">Signup </h2>
+
+			{% if error%}
+
+		<div class="error"> Your registration has been unsuccessful.</div>	
+		{% endif %}
+
+		<input type="username" class="form-control" name="username"  placeholder="Username" required>
+		<input type="password" class="form-control" name="password1" placeholder="Password" value="" required>
+		<input type="password" class="form-control" name="password2" placeholder="Retype password" value="" required> {{user_form.password.errors}}		
+	
+
+		<select class="form-control" name="type">
+  <option value="2">Librarian</option>
+  <!-- <option value="0">Borrower</option>-->
+  <option value="1">Clerk</option>
+</select>
+	
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
+
+      </form>
+
+  </div> <!-- /container -->
+
+  	{% endif %}
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
+</html>
+

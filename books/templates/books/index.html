@@ -1,0 +1,46 @@
+{% extends "books/base.html" %}
+
+{%block title%} Index - Toshokan{%endblock%}
+{% block menu%}
+	{% if type = 0 %}
+					<li><a href="/borrower/">Borrower</a></li>
+					{% elif type = 1%}
+					<li><a href="/clerk/">Clerk</a></li>
+					{% elif type = 2 %}
+					<li><a href="/librarian/">Librarian</a></li>
+					{% else %}
+					<li><a href="/sign_in">Nothing to start</a></li>
+					{% endif %}
+					{% endblock %}
+
+
+{%block content %}
+ 
+
+
+    <!-- Marketing messaging and featurettes
+    ================================================== -->
+    <!-- Wrap the rest of the page in another container to center all the content. -->
+
+
+      <!-- Three columns of text below the carousel -->
+        <div class="col-lg-4">
+          <img class="img-circle" width=110 src="{{STATIC_URL}}images/books/p0.png">
+          <h2>Borrower</h2>
+		  <p> As a borrower, you can check available computer science and mathematics books by title, author name etc. You may request to borrow or buy books that are not on hold. </p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" width=110 src="{{STATIC_URL}}images/books/p1.png">
+          <h2>Clerk</h2>
+          <p>As a clerk, you can add borrowers with appropriate information to the online system. You can also check-out items borrowed by a borrower and process a book return.</p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+			<img class="img-circle"  width=110 src="{{STATIC_URL}}images/books/p2.png">
+          <h2>Librarian</h2>
+          <p>As a librarian, you can add a new book or a new copy of an existing book to the bookstore. You can also generate a report with all the books that have been checked out.</p>
+          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div><!-- /.col-lg-4 -->
+
+	  {%endblock%}

@@ -6,6 +6,9 @@ from books.models import *
 from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
 import time
+from django.db import connection, transaction, DatabaseError, IntegrityError
+from django.core.exceptions import *
+
 
 def clerk(request):
     logged_in = request.user.is_authenticated()
@@ -73,7 +76,47 @@ def checkout(request):
     if type != 1:
         return redirect('/rule')
 
-    return render(request, 'books/clerk/checkout.html', {'logged_in':logged_in, 'username':username, 'type':type})
+
+    error = False
+    cursor = connection.cursor()
+    flag = False
+    dueDate =''
+    callNumber = 0
+    
+    if request.method == 'POST':
+        checkout = CheckoutForm(request.POST)
+        if checkout.is_valid():
+            username1 = checkout.cleaned_data['username']
+            callNumber = checkout.cleaned_data['callNumber']
+            try:
+                borrower = Borrower.objects.get(username = username1, expiryDate__gt = date.today())
+            except:
+                error = True
+            else:
+                type = borrower.type.type
+
+                cursor.execute("SELECT bookTimeLimit  FROM books_borrowertype WHERE type ='%s' " %(type))
+                time_limit = cursor.fetchone()[0]
+
+               # cursor.execute("SELECT BC.copyNo FROM books_bookcopy as BC WHERE BC.callNumber_id = %s AND BC.status = 'IN'" %(callNumber))
+                try:
+                    copyNo = BookCopy.objects.filter(callNumber_id = callNumber, status ='IN')[0].copyNo
+                except IndexError:
+                    error = True
+                    copyNo = 'b'
+                else:
+                    cursor.execute("UPDATE books_bookcopy SET status='OUT' WHERE callNumber_id = %s AND copyNo = %s" %(callNumber, copyNo)) 
+
+                    dueDate =  date.today() + timedelta(days = time_limit)
+                    borrowing = Borrowing(bid = borrower, callNumber_id = callNumber, copyNo_id = copyNo, outDate = date.today(), inDate = None, dueDate = dueDate)
+                    borrowing.save()
+                    flag = True 
+        else:
+            error = True
+    else:
+        checkout = CheckoutForm()
+
+    return render(request, 'books/clerk/checkout.html', {'logged_in':logged_in, 'username':username, 'type':type, 'checkout':checkout,'error':error, 'dueDate':dueDate, 'callNumber':callNumber, 'flag':flag})
 
 def process_return(request):
     logged_in = request.user.is_authenticated()
@@ -83,8 +126,47 @@ def process_return(request):
     type = UserProfile.objects.get(username = username).type
     if type != 1:
         return redirect('/rule')
+    
+    error = False
+    flag = False
+    dueDate =''
+    callNumber = 0
+    borrowing = 0
+    
+    if request.method == 'POST':
+        return_form = ReturnForm(request.POST)
+        if return_form.is_valid():
+            callNumber = return_form.cleaned_data['callNumber']
+            copyNo = return_form.cleaned_data['copyNo']
+            try:
+                borrowing = Borrowing.objects.filter(callNumber_id = callNumber, copyNo_id = copyNo, inDate = None)[0]
+            except:
+                error = True
+            else:
+                flag = True
+                copy = BookCopy.objects.get(callNumber_id = callNumber, copyNo = copyNo)
+                copy.status = 'IN'
+                copy.save()
+                borrowing.inDate = date.today()
+                borrowing.save()
+                if borrowing.dueDate <= date.today():
+                    delta = (borrowing.dueDate - date.today()).days
+                    fine = Fine(amount = delta, issuedDate = date.today(), paidDate = None, borid_id = borrowing.id)
+                    fine.save()
+                    holds = HoldRequest.objects.filter(callNumber_id = callNumber)
+                    if len(holds) > 0:
+                        hold = holds[0]
+                        hold.delete()
+                        book = BookCopy.objects.get(callNumber_id = callNumber, copyNo = copyNo)
+                        book.status = 'ON'
+                        book.save()
+        else:
+            error = True
+    else:
+        return_form = ReturnForm()
 
-    return render(request, 'books/clerk/process_return.html', {'logged_in':logged_in, 'username':username, 'type':type})
+    return render(request, 'books/clerk/process_return.html', {'logged_in':logged_in, 'username':username, 'type':type, 'return_form':return_form,'error':error, 'dueDate':dueDate, 'callNumber':callNumber, 'flag':flag})
+
 
 def overdue(request):
     logged_in = request.user.is_authenticated()
@@ -95,4 +177,10 @@ def overdue(request):
     if type != 1:
         return redirect('/rule')
 
-    return render(request, 'books/clerk/overdue.html', {'logged_in':logged_in, 'username':username, 'type':type})
+    today_date = date.today()
+    books = Borrowing.objects.filter(dueDate__lt = today_date)
+    #cursor = connection.cursor()
+    #cursor.execute("SELECT bid_id, callNumber_id, copyNo_id FROM books_borrowing WHERE dueDate < %s" % (today))
+    #books = cursor.fetchall()
+
+    return render(request, 'books/clerk/overdue.html', {'logged_in':logged_in, 'username':username, 'type':type, 'books':books})

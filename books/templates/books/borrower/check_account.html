@@ -2,5 +2,55 @@
 
 {% block content %}
 
+ <div class="container">
+
+	 <h3> Books borrowed </h3>
+	 <table>
+		 <tr>
+			 <td> Book Number </td>
+			 <td> Date Checked Out </td>
+			 <td> Due Date </td>
+		</tr>
+
+		{% for book in books %}	
+		<tr>
+			<td> {{book.callNumber_id}}</td>
+			<td> {{book.outDate}}</td>
+			<td> {{book.dueDate}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+
+	<h3> Oustanding fines</h3>
+	<table>
+		 <tr>
+			 <td> Amount </td>
+			 <td> Issued Date </td>
+			 <td> Due Date </td>
+		</tr>
+
+		{% for fine in fines %}	
+		<tr>
+			<td> {{fine.0}}</td>
+			<td> {{fine.1}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+
+	<h3> Onhold Requests</h3>
+	<table>
+		 <tr>
+			 <td> Call Number </td>
+			 <td> Issued Date </td>
+		</tr>
+
+		{% for hold in holds %}	
+		<tr>
+			<td> {{hold.callNumber_id}}</td>
+			<td> {{hold.issuedDate}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+
 
 {% endblock %}

@@ -1,1 +1,30 @@
 {% extends "books/clerk.html" %}
+
+{% block content %}
+
+{% if  error %}
+	<h2> Book is not available or user is expired/unavailable.</h2>
+
+	{% else %}
+     <div class="container">
+
+	{% if flag %}
+	 You have checked out {{callNumber}}, the due date is {{dueDate}}
+
+	{% else %}
+
+      <form id="checkout" class="form-signin" method="post" action="/clerk/checkout/" role="form">
+		{% csrf_token %}
+        <h2 class="form-signin-heading">Please checkout a book </h2>
+		{{checkout.as_p}}
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+	</form>
+
+	{% endif %}
+
+    </div> <!-- /container -->
+	{% endif %}
+
+
+{% endblock %}

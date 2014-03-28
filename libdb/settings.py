@@ -63,8 +63,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'books',
         'USER': 'root',
-        'PASSWORD': ''
-        'HOST': '',  
+        'PASSWORD': '',
+        'HOST': '',
     }
 }
 

@@ -1,1 +1,31 @@
 {% extends "books/clerk.html" %}
+
+
+{% block content %}
+
+{% if  error %}
+	<h2> You have no book to return.</h2>
+
+	{% else %}
+     <div class="container">
+
+	{% if flag %}
+	 You have returned Book {{callNumber}}.
+
+	{% else %}
+
+      <form id="return_form" class="form-signin" method="post" action="/clerk/process_return/" role="form">
+		{% csrf_token %}
+        <h2 class="form-signin-heading">Please return a book </h2>
+		{{return_form.as_p}}
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+	</form>
+
+	{% endif %}
+
+    </div> <!-- /container -->
+	{% endif %}
+
+
+{% endblock %}

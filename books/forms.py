@@ -62,3 +62,26 @@ class BookForm(forms.Form):
     publisher = forms.CharField(max_length = 30, label='publisher')
     year = forms.IntegerField(min_value = 800,label='year')
     subject = forms.CharField(max_length = 10, label = 'subject')
+
+class CheckoutForm(forms.Form):
+    username = forms.CharField(max_length = 30, label ='borrower username')
+    callNumber = forms.IntegerField(min_value = 1, label='call number')
+
+
+class ReturnForm(forms.Form):
+    callNumber = forms.IntegerField(min_value = 1, label='call number')
+    copyNo = forms.IntegerField(min_value = 1, label = 'copy number')
+
+class HoldForm(forms.Form):
+    callNumber = forms.IntegerField(min_value = 1, label = 'book call number')
+
+
+class SearchForm(forms.Form):
+    title = forms.CharField(max_length = 30, label='title')
+    author = forms.CharField(max_length = 30, label ='author')
+    subject = forms.CharField(max_length = 10, label = 'subject')
+
+class PopularForm(forms.Form):
+    year = forms.IntegerField(min_value = 2000, label = 'year')
+    limit = forms.IntegerField(min_value = 1, label = 'limit')
+

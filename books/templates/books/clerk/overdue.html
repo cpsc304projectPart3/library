@@ -2,5 +2,26 @@
 
 {% block content %}
 
+ <div class="container">
 
+	 <h3> Overdue Items</h3>
+
+	 <table>
+		 <tr>
+			 <td> Borrower  </td>
+			 <td> Book </td>
+			 <td> Copy </td>
+		</tr>
+
+		{% for book in books %}	
+		<tr>
+			<td> {{book.bid_id}}</td>
+			<td> {{book.callNumber_id}}</td>
+			<td> {{book.copyNo_id}} </td>
+		</tr>
+		{% endfor %}
+	</table>
+
+
+	</div>
 {% endblock %}

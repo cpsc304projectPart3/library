@@ -2,5 +2,24 @@
 
 {% block content %}
 
+{% if error %}
+<h2> Your book is either available or doesn't exist, no need to place a hold.</h2>
+{% else %}
+
+{% if flag %}
+
+<h2> Your hold request for book {{callNumber}} has been placed </h2>
+
+{% else %}
+<form id="hold" class="form-signin" method="post" action="/borrower/hold/" role="form">
+		{% csrf_token %}
+        <h2 class="form-signin-heading">Please place a hold request </h2>
+		{{hold.as_p}}
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+	</form>
+{% endif %}
+
+
+{% endif %}
 
 {% endblock %}

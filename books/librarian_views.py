@@ -76,7 +76,21 @@ def book_report(request):
     if type != 2:
         return redirect('/rule')
     
-    return render(request, 'books/librarian/book_report.html', {'logged_in':logged_in, 'username':username, 'type':type})
+    flag = False
+    books = {}
+    subject=1
+    if request.method == 'POST':
+        flag = True
+        subject = request.POST['subject']
+        cursor = connection.cursor()
+        if subject:
+            cursor.execute("SELECT br.callNumber_id as id, br.outDate as outdate, br.dueDate as duedate FROM books_borrowing br, books_hassubject hs WHERE br.callNumber_id = hs.callNumber_id AND hs.subject LIKE '%s' AND br.inDate IS NULL " %(subject))
+            books = cursor.fetchall()
+        else:
+            cursor.execute("SELECT br.callNumber_id as id, br.outDate as outdate, br.dueDate as duedate FROM books_borrowing br, books_hassubject hs WHERE br.callNumber_id = hs.callNumber_id AND br.inDate IS NULL")
+            books = cursor.fetchall()
+
+    return render(request, 'books/librarian/book_report.html', {'logged_in':logged_in, 'username':username, 'type':type, 'books':books,'flag':flag})
 
 def popular_book(request):
     logged_in = request.user.is_authenticated()
@@ -86,6 +100,24 @@ def popular_book(request):
     type = UserProfile.objects.get(username = username).type
     if type != 2:
         return redirect('/rule')
+
+    flag = False
+    error = False
+    books = {}
+    if request.method == 'POST':
+        form = PopularForm(request.POST)
+        if form.is_valid():
+            flag = True
+            year = form.cleaned_data['year']
+            num = form.cleaned_data['limit']
+
+            cursor = connection.cursor()
+            cursor.execute("SELECT br.callNumber_id, bk.title, COUNT(br.callNumber_id) as borrows FROM books_borrowing br, books_book bk WHERE bk.id = br.callNumber_id AND year(br.outDate) = %s GROUP BY br.callNumber_id ORDER BY borrows DESC LIMIT %s" %(year, num) )
+            books = cursor.fetchall()
+        else:
+            error = True
+    else:
+        form = PopularForm()
     
-    return render(request, 'books/librarian/popular_book.html', {'logged_in':logged_in, 'username':username, 'type':type})
+    return render(request, 'books/librarian/popular_book.html', {'logged_in':logged_in, 'username':username, 'type':type, 'books':books, 'flag':flag, 'error':error, 'form':form})
 

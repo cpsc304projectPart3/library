@@ -38,13 +38,27 @@ def add_borrower(request):
         if borrower.is_valid():
             username = borrower.cleaned_data['username']
             password = borrower.cleaned_data['password']
-            type = borrower.cleaned_data['type']
+            type0 = borrower.cleaned_data['type']
             name = borrower.cleaned_data['name']
             address = borrower.cleaned_data['address']
             phone = borrower.cleaned_data['phone']
             emailAddress = borrower.cleaned_data['emailAddress']
             sinOrStNo = borrower.cleaned_data['sinOrStNo']
-            type = BorrowerType.objects.get(type=type)
+            cursor = connection.cursor()
+            try:
+                type = BorrowerType.objects.get(type=type0)
+            except ObjectDoesNotExist:
+                if type0 == 'ST':
+                    bookTimeLimit = 14
+                elif type0 == 'FA':
+                    bookTimeLimit = 84
+                elif type0 == 'SF':
+					bookTimeLimit = 42
+                cursor.execute("INSERT INTO books_borrowertype (type, bookTimeLimit) VALUES ('%s', '%s') " %(type0, bookTimeLimit))
+                transaction.commit_on_success()
+                type = BorrowerType.objects.get(type=type0)
+                
+                
             expiryDate = date.today() + timedelta(days = 365)
 
             # add borrower accounts
@@ -55,8 +69,11 @@ def add_borrower(request):
             user_type.save()
 
             # add borrower table
-            borrower_user = Borrower(username = username, password=password,name= name, address=address, phone=phone,emailAddress=emailAddress,sinOrStNo=sinOrStNo, expiryDate = expiryDate, type=type)
-            borrower_user.save()
+            try:
+                cursor.execute("INSERT INTO books_borrower (username, password, type, name, address, phone, emailAddress,sinOrStNo) VALUES ('%s', '%s', %s, '%s', '%s', '%s', '%s', '%s', '%s') " %(username, password, type, name, address, phone, emailAddress,sinOrStNo))
+                transaction.commit_unless_managed()
+            except:
+                error = False;
             registered = True
         else:
             error = True;

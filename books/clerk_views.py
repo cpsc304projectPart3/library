@@ -69,11 +69,13 @@ def add_borrower(request):
             user_type.save()
 
             # add borrower table
-            try:
-                cursor.execute("INSERT INTO books_borrower (username, password, type, name, address, phone, emailAddress,sinOrStNo, expiryDate) VALUES ('%s', '%s', %s, '%s', '%s', '%s', '%s', '%s', '%s', %s) " %(username, password, type, name, address, phone, emailAddress,sinOrStNo, expiryDate))
-                transaction.commit_unless_managed()
-            except:
-                error = False;
+            borrower_user = Borrower(username = username, password=password,name= name, address=address, phone=phone,emailAddress=emailAddress,sinOrStNo=sinOrStNo, expiryDate = expiryDate, type=type)
+            borrower_user.save()
+            #try:
+            #cursor.execute("INSERT INTO books_borrower (username, password, name, address, phone, emailAddress,sinOrStNo, expiryDate, type) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', %s, %s) " %(username, password, name, address, phone, emailAddress,sinOrStNo, expiryDate, type))
+            #transaction.commit_on_success()
+            #except:
+                #error = False;
             registered = True
         else:
             error = True;

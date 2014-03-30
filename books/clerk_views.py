@@ -61,13 +61,6 @@ def add_borrower(request):
                 
             expiryDate = date.today() + timedelta(days = 365)
 
-            # add borrower accounts
-            user = User.objects.create_user(username, None, password)
-            user.set_password(password)
-            user.save()
-            user_type = UserProfile(username=username,type=0)
-            user_type.save()
-
             # add borrower table
             borrower_user = Borrower(username = username, password=password,name= name, address=address, phone=phone,emailAddress=emailAddress,sinOrStNo=sinOrStNo, expiryDate = expiryDate, type=type)
             borrower_user.save()
@@ -76,6 +69,13 @@ def add_borrower(request):
             #transaction.commit_on_success()
             #except:
                 #error = False;
+            
+            # add borrower accounts
+            user = User.objects.create_user(username, None, password)
+            user.set_password(password)
+            user.save()
+            user_type = UserProfile(username=username,type=0)
+            user_type.save()
             registered = True
         else:
             error = True;

@@ -70,7 +70,7 @@ def add_borrower(request):
 
             # add borrower table
             try:
-                cursor.execute("INSERT INTO books_borrower (username, password, type, name, address, phone, emailAddress,sinOrStNo) VALUES ('%s', '%s', %s, '%s', '%s', '%s', '%s', '%s', '%s') " %(username, password, type, name, address, phone, emailAddress,sinOrStNo))
+                cursor.execute("INSERT INTO books_borrower (username, password, type, name, address, phone, emailAddress,sinOrStNo, expiryDate) VALUES ('%s', '%s', %s, '%s', '%s', '%s', '%s', '%s', '%s', %s) " %(username, password, type, name, address, phone, emailAddress,sinOrStNo, expiryDate))
                 transaction.commit_unless_managed()
             except:
                 error = False;

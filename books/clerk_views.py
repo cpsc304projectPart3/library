@@ -196,7 +196,6 @@ def overdue(request):
     if type != 1:
         return redirect('/rule')
 
-    books = Borrowing.objects.filter(dueDate__lt = today_date)
     cursor = connection.cursor()
     cursor.execute("SELECT bid_id, callNumber_id, copyNo_id FROM books_borrowing WHERE dueDate < CURTIME()" ) 
     books = cursor.fetchall()

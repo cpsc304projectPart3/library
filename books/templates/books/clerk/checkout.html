@@ -3,13 +3,13 @@
 {% block content %}
 
 {% if  error %}
-	<h2> Book is not available or user is expired/unavailable.</h2>
+	<h2> Book is not available and/or user is expired/unavailable.</h2>
 
 	{% else %}
      <div class="container">
 
 	{% if flag %}
-	 You have checked out {{callNumber}}, the due date is {{dueDate}}
+	 You have checked out Book {{callNumber}}, the due date is {{dueDate}}.
 
 	{% else %}
 
@@ -25,6 +25,7 @@
 
     </div> <!-- /container -->
 	{% endif %}
+    <p></p>
 
 
 {% endblock %}

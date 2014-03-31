@@ -58,17 +58,12 @@ def add_borrower(request):
                 transaction.commit_on_success()
                 type = BorrowerType.objects.get(type=type0)
             
-            # we assume the expiry date for every borrower is one year
+            # we assume the expiry date for every borrower is one year from current day
             expiryDate = date.today() + timedelta(days = 365)
             
             # add borrower table
-            borrower_user = Borrower(username = username, password=password,name= name, address=address, phone=phone,emailAddress=emailAddress,sinOrStNo=sinOrStNo, expiryDate = expiryDate, type=type)
-            borrower_user.save()
-            #try:
-            #cursor.execute("INSERT INTO books_borrower (username, password, name, address, phone, emailAddress,sinOrStNo, expiryDate, type) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', %s, %s) " %(username, password, name, address, phone, emailAddress,sinOrStNo, expiryDate, type))
-            #transaction.commit_on_success()
-            #except:
-            #error = False;
+            cursor.execute("INSERT INTO books_borrower (username, password, name, address, phone, emailAddress, sinOrStNo, expiryDate,  type_id) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', ADDDATE(CURDATE(), 365), '%s') " %(username, password, name, address, phone, emailAddress,sinOrStNo, type0))
+            transaction.commit_on_success()
             
             # add borrower accounts
             user = User.objects.create_user(username, None, password)
@@ -117,9 +112,9 @@ def checkout(request):
                 cursor.execute("SELECT bookTimeLimit  FROM books_borrowertype WHERE type ='%s' " %(type))
                 time_limit = cursor.fetchone()[0]
                 
-                # cursor.execute("SELECT BC.copyNo FROM books_bookcopy as BC WHERE BC.callNumber_id = %s AND BC.status = 'IN'" %(callNumber))
+                
                 try:
-                    copyNo = BookCopy.objects.filter(callNumber_id = callNumber, status ='IN')[0].copyNo
+                    copyNo = cursor.execute("SELECT BC.copyNo FROM books_bookcopy as BC WHERE BC.callNumber_id = %s AND BC.status = 'IN'" %(callNumber))
                 except IndexError:
                     error = True
                     copyNo = 'b'

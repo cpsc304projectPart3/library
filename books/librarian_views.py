@@ -104,6 +104,7 @@ def popular_book(request):
     flag = False
     error = False
     books = {}
+    year = ''
     if request.method == 'POST':
         form = PopularForm(request.POST)
         if form.is_valid():
@@ -119,5 +120,5 @@ def popular_book(request):
     else:
         form = PopularForm()
     
-    return render(request, 'books/librarian/popular_book.html', {'logged_in':logged_in, 'username':username, 'type':type, 'books':books, 'flag':flag, 'error':error, 'form':form})
+    return render(request, 'books/librarian/popular_book.html', {'logged_in':logged_in, 'username':username, 'type':type, 'books':books, 'flag':flag, 'error':error, 'form':form, 'year':year})
 

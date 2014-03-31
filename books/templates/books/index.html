@@ -9,7 +9,7 @@
 					{% elif type = 2 %}
 					<li><a href="/librarian/">Librarian</a></li>
 					{% else %}
-					<li><a href="/sign_in">Nothing to start</a></li>
+					<li><a href="/sign_in">Please sign in or sign up to start</a></li>
 					{% endif %}
 					{% endblock %}
 
@@ -21,26 +21,26 @@
     <!-- Marketing messaging and featurettes
     ================================================== -->
     <!-- Wrap the rest of the page in another container to center all the content. -->
-
+    <!-- Images from: http://foundationforlps.org/wp-content/uploads/2012/04/high-school-students-in-library.jpg and http://thechronicleherald.ca/sites/default/files/imagecache/ch_article_main_image/articles/zambia.jpg and http://yrhs.gssd.ca/ecquine/tour/images/Front%20Desk.jpg -->
 
       <!-- Three columns of text below the carousel -->
         <div class="col-lg-4">
-          <img class="img-circle" width=110 src="{{STATIC_URL}}images/books/p0.png">
+          <img class="img-circle" width=110 src="{{STATIC_URL}}images/books/borrowers.jpeg">
           <h2>Borrower</h2>
-		  <p> As a borrower, you can check available computer science and mathematics books by title, author name etc. You may request to borrow or buy books that are not on hold. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+		  <p> As a borrower, you can search for books on titles, authors and subjects. Also, you can check your account and pay fines. You can borrow books and place hold request on books.</p>
+          
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
-          <img class="img-circle" width=110 src="{{STATIC_URL}}images/books/p1.png">
+          <img class="img-circle" width=110 src="{{STATIC_URL}}images/books/clerk4.png">
           <h2>Clerk</h2>
-          <p>As a clerk, you can add borrowers with appropriate information to the online system. You can also check-out items borrowed by a borrower and process a book return.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <p>As a clerk, you can add borrowers and check for overdue books. Also, you can check out items for borrowers and process return items from borrowers.</p>
+          
         </div><!-- /.col-lg-4 -->
         <div class="col-lg-4">
-			<img class="img-circle"  width=110 src="{{STATIC_URL}}images/books/p2.png">
+			<img class="img-circle"  width=110 src="{{STATIC_URL}}images/books/librarian2.png">
           <h2>Librarian</h2>
-          <p>As a librarian, you can add a new book or a new copy of an existing book to the bookstore. You can also generate a report with all the books that have been checked out.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <p>As a librarian, you can add a new book or a new copy of an existing book. Also, you can generate reports with all the books that have been checked out and the most popular books in a certain year.</p>
+          
         </div><!-- /.col-lg-4 -->
 
 	  {%endblock%}

@@ -3,12 +3,12 @@
 {% block content %}
 
 {% if error %}
-<h2> Your book is either available or doesn't exist, no need to place a hold.</h2>
+<h2> Your book is either on the shelves or does not exist. Please try again.</h2>
 {% else %}
 
 {% if flag %}
 
-<h2> Your hold request for book {{callNumber}} has been placed </h2>
+<h2> Your hold request for book {{callNumber}} has been placed.</h2>
 
 {% else %}
 <form id="hold" class="form-signin" method="post" action="/borrower/hold/" role="form">

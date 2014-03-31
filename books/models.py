@@ -17,7 +17,7 @@ class Borrower(models.Model):
     emailAddress = models.CharField(max_length = 30)
     sinOrStNo = models.CharField(max_length = 10, unique = True)
     expiryDate = models.DateField()    
-    type = models.ForeignKey('BorrowerType')
+    type = models.ForeignKey('BorrowerType') 
  
 class BorrowerType(models.Model):
         TYPE = (

@@ -5,12 +5,18 @@
 
 <div class="container">
 	{% if flag %}
-	 <h3> The Most Popular Books </h3>
+    <h3> Most Popular Books in {{year}}</h3>
+     <head>
+         <style>
+             td
+             {padding-right:60px;}
+             </style>
+     </head>
 	<table>
 		 <tr>
 			 <td> Call Number </td>
 			 <td> Title </td>
-			 <td> Signed out times  </td>
+			 <td> Number of times borrowed  </td>
 		</tr>
 
 		{% for book in books %}	
@@ -24,14 +30,15 @@
 	{% else%}
  <form class="report" method="post" action="/librarian/popular_book/" role="form">
 		{% csrf_token %}
-        <h2 class="form-signin-heading">Select the year and limit</h2>
+        <h2 class="form-signin-heading">Select the year and max. number of books</h2>
 		{{form.as_p}}
 
-        <button class="btn btn-lg btn-primary btn-block" type="submit">get list</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Get Report</button>
 	</form>
 
 
 	{% endif %}
+    <p></p>
 	</div>
 
 {% endblock %}

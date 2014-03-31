@@ -24,9 +24,9 @@ class UserForm(forms.Form):
         return self.cleaned_data
 
 TYPE = (
-        ('ST', 'student'),
-        ('FA', 'faculty'),
-        ('SF', 'staff'),
+        ('ST', 'Student'),
+        ('FA', 'Faculty'),
+        ('SF', 'Staff'),
     )
 
 
@@ -37,8 +37,8 @@ class BorrowerForm(forms.Form):
     name = forms.CharField(max_length=30)
     address = forms.CharField(max_length=30)
     phone = forms.CharField(max_length=30)
-    emailAddress = forms.CharField(widget=forms.EmailInput(),label='email address')
-    sinOrStNo = forms.CharField(max_length=10,label='SIN or st.no')
+    emailAddress = forms.CharField(widget=forms.EmailInput(),label='Email Address')
+    sinOrStNo = forms.CharField(max_length=10,label='SIN or Student Number')
     type = forms.ChoiceField(widget=forms.RadioSelect, choices=TYPE)
 
     def clean_username(self):
@@ -56,32 +56,32 @@ class BorrowerForm(forms.Form):
 
 
 class BookForm(forms.Form):
-    isbn = forms.CharField(max_length = 30, label ='isbn')
-    title = forms.CharField(max_length = 30, label='title')
-    mainAuthor = forms.CharField(max_length = 30, label ='main author')
-    publisher = forms.CharField(max_length = 30, label='publisher')
-    year = forms.IntegerField(min_value = 800,label='year')
-    subject = forms.CharField(max_length = 10, label = 'subject')
+    isbn = forms.CharField(max_length = 30, label ='ISBN')
+    title = forms.CharField(max_length = 30, label='Title')
+    mainAuthor = forms.CharField(max_length = 30, label ='Main Author (First Last)')
+    publisher = forms.CharField(max_length = 30, label='Publisher')
+    year = forms.IntegerField(min_value = 800,label='Year')
+    subject = forms.CharField(max_length = 30, label = 'Subject')
 
 class CheckoutForm(forms.Form):
-    username = forms.CharField(max_length = 30, label ='borrower username')
-    callNumber = forms.IntegerField(min_value = 1, label='call number')
+    username = forms.CharField(max_length = 30, label ='Borrower Username')
+    callNumber = forms.IntegerField(min_value = 1, label='Call Number')
 
 
 class ReturnForm(forms.Form):
-    callNumber = forms.IntegerField(min_value = 1, label='call number')
-    copyNo = forms.IntegerField(min_value = 1, label = 'copy number')
+    callNumber = forms.IntegerField(min_value = 1, label='Call Number')
+    copyNo = forms.IntegerField(min_value = 1, label = 'Copy Number')
 
 class HoldForm(forms.Form):
-    callNumber = forms.IntegerField(min_value = 1, label = 'book call number')
+    callNumber = forms.IntegerField(min_value = 1, label = 'Book Call Number')
 
 
 class SearchForm(forms.Form):
-    title = forms.CharField(max_length = 30, label='title')
-    author = forms.CharField(max_length = 30, label ='author')
-    subject = forms.CharField(max_length = 10, label = 'subject')
+    title = forms.CharField(max_length = 30, label='Title')
+    author = forms.CharField(max_length = 30, label ='Main Author (First Last)')
+    subject = forms.CharField(max_length = 30, label = 'Subject')
 
 class PopularForm(forms.Form):
-    year = forms.IntegerField(min_value = 2000, label = 'year')
-    limit = forms.IntegerField(min_value = 1, label = 'limit')
+    year = forms.IntegerField(min_value = 2000, label = 'Year')
+    limit = forms.IntegerField(min_value = 1, label = 'Max. number of books')
 

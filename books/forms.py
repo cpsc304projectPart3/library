@@ -75,11 +75,17 @@ class ReturnForm(forms.Form):
 class HoldForm(forms.Form):
     callNumber = forms.IntegerField(min_value = 1, label = 'Book Call Number')
 
-
+KTYPE = (
+        ('T', 'title'),
+        ('A', 'author'),
+        ('S', 'subject'),
+    )
+    
 class SearchForm(forms.Form):
-    title = forms.CharField(max_length = 30, label='Title')
-    author = forms.CharField(max_length = 30, label ='Main Author (First Last)')
-    subject = forms.CharField(max_length = 30, label = 'Subject')
+    key_word = forms.CharField(max_length = 30, label='Key word')
+    key_word_type = forms.ChoiceField(widget=forms.RadioSelect, choices=KTYPE)
+    
+
 
 class PopularForm(forms.Form):
     year = forms.IntegerField(min_value = 2000, label = 'Year')

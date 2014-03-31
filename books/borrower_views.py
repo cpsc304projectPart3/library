@@ -41,12 +41,16 @@ def search(request):
         form = SearchForm(request.POST)
         if form.is_valid():
             flag = True
-            subject = form.cleaned_data['subject']
-            title = form.cleaned_data['title']
-            author = form.cleaned_data['author']
-
+            key_word = form.cleaned_data['key_word']
+            type = form.cleaned_data['key_word_type']
+            
             cursor = connection.cursor()
-            cursor.execute("SELECT bk.id, bk.title, COUNT(bk.id) as num FROM books_book bk, books_bookcopy bc WHERE bc.callNumber_id = bk.id AND bc.status = 'IN' AND bk.title LIKE '%s' AND bc.callNumber_id IN (SELECT callNumber_id FROM books_hassubject WHERE subject LIKE '%s') AND bc.callNumber_id IN (SELECT callNumber_id FROM books_hasauthor WHERE name LIKE '%s')  GROUP BY bk.id" %(title, subject, author))
+            if type == 'A':
+                cursor.execute("SELECT bk.id, bk.title, COUNT(bk.id) as num FROM books_book bk, books_bookcopy bc WHERE bc.callNumber_id = bk.id AND bc.status = 'IN' AND bc.callNumber_id IN (SELECT callNumber_id FROM books_hasauthor WHERE name LIKE '%s') GROUP BY bk.id" %(key_word))
+            if type == 'T':
+                cursor.execute("SELECT bk.id, bk.title, COUNT(bk.id) as num FROM books_book bk, books_bookcopy bc WHERE bc.callNumber_id = bk.id AND bc.status = 'IN' AND bk.title LIKE '%s' GROUP BY bk.id" %(key_word))
+            if type == 'S':
+                cursor.execute("SELECT bk.id, bk.title, COUNT(bk.id) as num FROM books_book bk, books_bookcopy bc WHERE bc.callNumber_id = bk.id AND bc.status = 'IN' AND bc.callNumber_id IN (SELECT callNumber_id FROM books_hassubject WHERE subject LIKE '%s') GROUP BY bk.id" %(key_word))
 
             books = cursor.fetchall()
         else:

@@ -30,7 +30,7 @@ def add_borrower(request):
     type = UserProfile.objects.get(username = username1).type
     if type != 1:
         return redirect('/rule')
-
+    
     registered = False
     error = False
     if request.method == 'POST':
@@ -57,10 +57,10 @@ def add_borrower(request):
                 cursor.execute("INSERT INTO books_borrowertype (type, bookTimeLimit) VALUES ('%s', '%s') " %(type0, bookTimeLimit))
                 transaction.commit_on_success()
                 type = BorrowerType.objects.get(type=type0)
-                
-                
+            
+            # we assume the expiry date for every borrower is one year
             expiryDate = date.today() + timedelta(days = 365)
-
+            
             # add borrower table
             borrower_user = Borrower(username = username, password=password,name= name, address=address, phone=phone,emailAddress=emailAddress,sinOrStNo=sinOrStNo, expiryDate = expiryDate, type=type)
             borrower_user.save()
@@ -68,7 +68,7 @@ def add_borrower(request):
             #cursor.execute("INSERT INTO books_borrower (username, password, name, address, phone, emailAddress,sinOrStNo, expiryDate, type) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', %s, %s) " %(username, password, name, address, phone, emailAddress,sinOrStNo, expiryDate, type))
             #transaction.commit_on_success()
             #except:
-                #error = False;
+            #error = False;
             
             # add borrower accounts
             user = User.objects.create_user(username, None, password)
@@ -79,10 +79,10 @@ def add_borrower(request):
             registered = True
         else:
             error = True;
-
+    
     else:
         borrower = BorrowerForm()
-
+    
     return render(request, 'books/clerk/add_borrower.html', {'logged_in':logged_in, 'username':username1, 'type':type, 'error':error, 'borrower':borrower, 'registered':registered})
 
 
@@ -94,8 +94,8 @@ def checkout(request):
     type = UserProfile.objects.get(username = username).type
     if type != 1:
         return redirect('/rule')
-
-
+    
+    
     error = False
     cursor = connection.cursor()
     flag = False
@@ -113,28 +113,28 @@ def checkout(request):
                 error = True
             else:
                 type = borrower.type.type
-
+                
                 cursor.execute("SELECT bookTimeLimit  FROM books_borrowertype WHERE type ='%s' " %(type))
                 time_limit = cursor.fetchone()[0]
-
-               # cursor.execute("SELECT BC.copyNo FROM books_bookcopy as BC WHERE BC.callNumber_id = %s AND BC.status = 'IN'" %(callNumber))
+                
+                # cursor.execute("SELECT BC.copyNo FROM books_bookcopy as BC WHERE BC.callNumber_id = %s AND BC.status = 'IN'" %(callNumber))
                 try:
                     copyNo = BookCopy.objects.filter(callNumber_id = callNumber, status ='IN')[0].copyNo
                 except IndexError:
                     error = True
                     copyNo = 'b'
                 else:
-                    cursor.execute("UPDATE books_bookcopy SET status='OUT' WHERE callNumber_id = %s AND copyNo = %s" %(callNumber, copyNo)) 
-
+                    cursor.execute("UPDATE books_bookcopy SET status='OUT' WHERE callNumber_id = %s AND copyNo = %s" %(callNumber, copyNo))
+                    
                     dueDate =  date.today() + timedelta(days = time_limit)
                     borrowing = Borrowing(bid = borrower, callNumber_id = callNumber, copyNo_id = copyNo, outDate = date.today(), inDate = None, dueDate = dueDate)
                     borrowing.save()
-                    flag = True 
+                    flag = True
         else:
             error = True
     else:
         checkout = CheckoutForm()
-
+    
     return render(request, 'books/clerk/checkout.html', {'logged_in':logged_in, 'username':username, 'type':type, 'checkout':checkout,'error':error, 'dueDate':dueDate, 'callNumber':callNumber, 'flag':flag})
 
 def process_return(request):
@@ -183,7 +183,7 @@ def process_return(request):
             error = True
     else:
         return_form = ReturnForm()
-
+    
     return render(request, 'books/clerk/process_return.html', {'logged_in':logged_in, 'username':username, 'type':type, 'return_form':return_form,'error':error, 'dueDate':dueDate, 'callNumber':callNumber, 'flag':flag})
 
 
@@ -195,8 +195,8 @@ def overdue(request):
     type = UserProfile.objects.get(username = username).type
     if type != 1:
         return redirect('/rule')
-
+            
     cursor = connection.cursor()
-    cursor.execute("SELECT bid_id, callNumber_id, copyNo_id FROM books_borrowing WHERE dueDate < CURTIME()" ) 
+    cursor.execute("SELECT bid_id, callNumber_id, copyNo_id FROM books_borrowing WHERE dueDate < CURTIME()" )
     books = cursor.fetchall()
     return render(request, 'books/clerk/overdue.html', {'logged_in':logged_in, 'username':username, 'type':type, 'books':books})

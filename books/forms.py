@@ -47,17 +47,11 @@ class BorrowerForm(forms.Form):
             raise forms.ValidationError(("A user with that username already exists."))
         else:
             return self.cleaned_data['username']
-    
-    
+
     def clean(self):
         if 'password' in self.cleaned_data and 'retype_password' in self.cleaned_data:
             if self.cleaned_data['password'] != self.cleaned_data['retype_password']:
                 raise forms.ValidationError(("The two password fields didn't match."))
-        existing2 = Borrower.objects.filter(sinOrStNo=self.cleaned_data['sinOrStNo'])
-        if existing2.exists():
-            raise forms.ValidationError(("A user with that sinOrStNo already exists."))
-        else:
-            return self.cleaned_data['sinOrStNo']
         return self.cleaned_data
 
 
